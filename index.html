@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+	<style>
+		body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Hints Section Styles */
+        .hints {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .hint {
+            margin-bottom: 10px;
+        }
+        /* Questions Section Styles */
+        .questions {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .question {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .answer {
+            display: none;
+            padding: 10px 0;
+        }
+        /* More/Less Button Styles */
+        .toggle-button {
+            margin-top: 10px;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        /* Footer Styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+		#address-info {
+    		float: left;
+    		text-align: left;
+		}
+
+		#timestamp {
+    		float: right;
+    		text-align: right;
+    		position: relative;
+			top: 10px;
+			background-color: rgba(0, 0, 0, 0.7);
+			color: white;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+
+		#rec {
+			clear: both; /* Clear the floats to contain #rec */
+			position: relative;
+			width: 640px;
+			height: 360px;
+			border: 4px solid transparent;
+			margin: 0 auto;
+		}
+
+		/* Define the player's CSS */
+		#player {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+		}
+
+        #countdown-clock {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+		#svg {
+			margin: auto;
+		}
+
+        #SVGlue {
+  			display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+        }
+
+	</style>
+	<script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+	<header>
+        <h1>Challenge</h1>
+    </header>
+    <div class="container">
+    	<div id="address-info">
+			<p>Balance: <span id="address-balance"></span> BTC = <span id="usd-equivalent"></span></p>
+		</div>
+		<div id="timestamp">00:00</div>
+		<div id="countdown-clock"><span id="countdown"></span></div>
+        <!-- About Section -->
+
+        <!-- Hints Section -->
+        <div class="hints">
+            <h2>Hints</h2>
+            <div class="hint" id="hint1">
+                <a name="hint1"></a>
+                <h3>Hint 1</h3>
+                <p>This is the first hint. Replace this with your actual hint content.</p>
+                <div id="rec">
+					<div id="player"></div>
+				</div>
+            </div>
+            <div class="hint" id="hint2">
+                <a name="hint2"></a>
+                <h3>Hint 2</h3>
+                <p>This is the second hint. Replace this with your actual hint content.</p>
+            </div>
+            <div class="hint" id="hint3">
+                <a name="hint3"></a>
+                <h3>Hint 3</h3>
+                <p>This is the third hint. Replace this with your actual hint content.</p>
+            </div>
+        </div>
+
+    <div class="container">
+        <!-- Questions Section -->
+        <div class="questions">
+            <h2>Questions</h2>
+            <div class="question" id="question1">
+                <h3>Question 1</h3>
+                <div class="answer">
+                    <p>Answer to Question 1. Replace this with your actual answer content.</p>
+                </div>
+            </div>
+            <div class="question" id="question2">
+                <h3>Question 2</h3>
+                <div class="answer">
+                    <p>Answer to Question 2. Replace this with your actual answer content.</p>
+                </div>
+            </div>
+            <div class="question" id="question3">
+                <h3>Question 3</h3>
+                <div class="answer">
+                    <p>Answer to Question 3. Replace this with your actual answer content.</p>
+                </div>
+            </div>
+            <div class="question" id="question4">
+                <h3>Question 4</h3>
+                <div class="answer">
+                    <p>Answer to Question 4. Replace this with your actual answer content.</p>
+                </div>
+            </div>
+            <div class="question" id="question5">
+                <h3>Question 5</h3>
+                <div class="answer">
+                    <p>Answer to Question 5. Replace this with your actual answer content.</p>
+                </div>
+            </div>
+            <div id="moreButton" class="toggle-button">More</div>
+            <div id="lessButton" class="toggle-button" style="display: none;">Less</div>
+        </div>
+    </div>
+	<div id="svg">
+		<svg id="SVGlue" width=460px height=600px></svg>
+	</div>
+	    <!-- Footer Section -->
+    <footer>
+        <a href="https://github.com/yourusername" target="_blank">Source Code</a>
+        <a href="https://instagram.com/yourinstagram" target="_blank">Instagram</a>
+        <a href="https://twitter.com/yourtwitter" target="_blank">Twitter</a>
+        <a href="policies.html">Policies & Disclaimers</a>
+    </footer>
+	<script>
+		const walletAddress = 'bc1qnftr84y400khpq9nkg8n55fzd5lrtmrauxf6ghwh6ec2jwtkz27qmvyk3c';
+
+		const constants = {
+			0: { m0801:-0.0000000001778814, m0802:0.000001028486, m0803:-0.001840386, m0804:0.9767985, m0805:161.6667, m1901:-0.000000000004912507, m1902:0.00000002640374, m1903:-0.00004444483, m1904:0.02239132, m1905:31, m1201:-0.000000000009270055, m1202:0.00000002810178, m1203:-0.00001455565, m1204:-0.007550225, m1205:73},
+			1: { m0801:-0.0000000003604234, m0802:0.000001243898, m0803:-0.0010529, m0804:0.06219325, m0805:187.3333, m1901:0.00000000002749316, m1902:-0.0000001147984, m1903:0.0001433886, m1904:-0.04941946, m1905:26.33333, m1201:5.633069E-13, m1202:0.000000009286787, m1203:-0.00003392627, m1204:0.02509866, m1205:75},
+			2: { m0801:0.0000000004630375, m0802:-0.000002004174, m0803:0.002666545, m0804:-1.048782, m0805:228, m1901:-0.00000000001615627, m1902:0.00000007342966, m1903:-0.000104316, m1904:0.04484277, m1905:28, m1201:-0.00000000001584376, m1202:0.00000005974862, m1203:-0.00006280295, m1204:0.01508107, m1205:74.33333},
+			3: { m0801:0.00000000005051516, m0802:-0.00000002772319, m0803:-0.0003274386, m0804:0.3425072, m0805:189, m1901:-0.000000000006839611, m1902:0.0000000303101, m1903:-0.00004152659, m1904:0.01687056, m1905:21.33333, m1201:-0.00000000002051883, m1202:0.0000000909303, m1203:-0.0001245798, m1204:0.05061169, m1205:78},
+			4: { m0801:0.00000000001080186, m0802:-0.0000001619788, m0803:0.0004319936, m0804:-0.2931066, m0805:218, m1901:-0.00000000003008087, m1902:0.0000001266961, m1903:-0.0001614587, m1904:0.05885814, m1905:26, m1201:0.0000000000259744, m1202:-0.0000001177311, m1203:0.0001661667, m1204:-0.07027447, m1205:71.66667},
+			5: { m0801:-0.000000001024603, m0802:0.000004281052, m0803:-0.005372738, m0804:1.747534, m0805:340, m1901:0.00000000005048969, m1902:-0.0000002187338, m1903:0.0002929919, m1904:-0.1181678, m1905:29.33333, m1201:-0.00000000001982306, m1202:0.00000009490061, m1203:-0.0001450261, m1204:0.06960717, m1205:71.66667},
+			6: { m0801:0, m0802:0.00000009912324, m0803:-0.0002308133, m0804:0.0907822, m0805:216, m1901:0, m1902:-0.000000003892184, m1903:0.00000888414, m1904:-0.003271118, m1905:26.33333, m1201:0, m1202:0.000000009935641, m1203:-0.00002528363, m1204:0.01262213, m1205:69},
+			7: { m0801:0, m0802:0.0000002688816, m0803:-0.0006109689, m0804:0.2195974, m0805:169.3333, m1901:0, m1902:-0.00000001373801, m1903:0.00004543914, m1904:-0.03395173, m1905:29.33333, m1201:0, m1202:0.000000009465833, m1203:-0.00002514228, m1204:0.01353801, m1205:73.33333},
+			8: { m0801:0.00000000005051516, m0802:-0.00000002772319, m0803:-0.0003274386, m0804:0.3425072, m0805:189, m1901:-0.000000000006839611, m1902:0.0000000303101, m1903:-0.00004152659, m1904:0.01687056, m1905:21.33333, m1201:-0.00000000002051883, m1202:0.0000000909303, m1203:-0.0001245798, m1204:0.05061169, m1205:78},
+			9: { m0801:-0.000000001024603, m0802:0.000004281052, m0803:-0.005372738, m0804:1.747534, m0805:340, m1901:0.00000000005048969, m1902:-0.0000002187338, m1903:0.0002929919, m1904:-0.1181678, m1905:29.33333, m1201:-0.00000000001982306, m1202:0.00000009490061, m1203:-0.0001450261, m1204:0.06960717, m1205:71.66667},
+		};
+
+		// JavaScript for Questions Section
+        const questions = document.querySelectorAll(".question");
+        const moreButton = document.getElementById("moreButton");
+        const lessButton = document.getElementById("lessButton");
+
+        let expanded = false;
+
+        questions.forEach((q, index) => {
+            if (index >= 3) {
+            console.log("less");
+                q.style.display = "none";
+            }
+        });
+
+        // Function to toggle answers
+        function toggleAnswers(event) {
+            const clickedQuestion = event.currentTarget;
+            const answer = clickedQuestion.querySelector(".answer");
+
+            if (expanded) {
+                // Collapse all answers
+                questions.forEach((q) => {
+                    const a = q.querySelector(".answer");
+                    if (q !== clickedQuestion && a.style.display === "block") {
+                        a.style.display = "none";
+                    }
+                });
+            }
+
+            // Toggle the clicked answer
+            answer.style.display = answer.style.display === "block" ? "none" : "block";
+            expanded = true;
+        }
+
+        // Event listener for question clicks
+        questions.forEach((q) => {
+            q.addEventListener("click", toggleAnswers);
+        });
+
+        // Event listener for the "More" button
+        moreButton.addEventListener("click", () => {
+            // Show all questions
+            questions.forEach((q) => {
+                q.style.display = "block";
+            });
+            moreButton.style.display = "none";
+            lessButton.style.display = "block";
+        });
+
+        // Event listener for the "Less" button
+        lessButton.addEventListener("click", () => {
+            // Hide additional questions
+            questions.forEach((q, index) => {
+                if (index >= 3) {
+                console.log("less");
+                    q.style.display = "none";
+                }
+            });
+            lessButton.style.display = "none";
+            moreButton.style.display = "block";
+        });
+        
+        // Perameter Handling
+        // Parse the URL to get the parameter value
+		function getParameterByName(name) {
+		    const url = new URL(window.location.href);
+		    return url.searchParams.get(name);
+		}
+		
+		// Scroll to the specified element based on the URL parameter
+		function scrollToElement(elementId) {
+		    const element = document.getElementById(elementId);
+		    if (element) {
+		        element.scrollIntoView({ behavior: "smooth" });
+		    }
+		}
+		
+		// Get the element ID from the URL parameter
+		const elementId = getParameterByName('element');
+		
+		// Scroll to the specified element
+		if (elementId) {
+		    scrollToElement(elementId);
+		}
+
+		function onYouTubeIframeAPIReady() {
+			var player = new YT.Player('player', {
+				videoId: 'UdBN8PkPCxM',
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange,
+					'onPlaybackQualityChange': onPlaybackQualityChange,
+					'onPlaybackRateChange': onPlaybackRateChange,
+					'onError': onError,
+					'onApiChange': onApiChange,
+					'onVolumeChange': onVolumeChange,
+					'onSeek': onSeek,
+					'onFullscreenChange': onFullscreenChange
+				}
+			});
+
+			var rec = document.getElementById('rec');
+
+			function logEvent(eventName, eventInfo) {
+				console.log(eventName, eventInfo);
+			}
+
+			function updateInterface() {
+				const vTime = player.getCurrentTime();
+				const pbs = player.getPlaybackRate();
+				const minutes = Math.floor(vTime / 60);
+				const seconds = Math.floor(vTime % 60);
+				const timestamp = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+				document.getElementById('timestamp').textContent = timestamp;
+				const { h, s, l } = calculate(pbs*4-1, vTime);
+				//console.log(h, s, l, pbs, vTime);
+				rec.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`;
+			}
+
+			function onPlayerReady(event) {
+				logEvent('onReady', event);
+				event.target.playVideo();
+			setInterval(updateInterface, 1000);
+		}
+
+		function calculate(index, t) {
+			const math = constants[index];
+			if (!math) {
+				return { h: 0, s: 0, l: 0 };
+			}			
+			const { m0801, m0802, m0803, m0804, m0805, m1901, m1902, m1903, m1904, m1905, m1201, m1202, m1203, m1204, m1205 } = math;
+			const x = t;
+			const h = Math.round(Math.pow(x, 4) * m0801 + Math.pow(x, 3) * m0802 + Math.pow(x, 2) * m0803 + x * m0804 + m0805);
+			const s = Math.round(Math.pow(x, 4) * m1901 + Math.pow(x, 3) * m1902 + Math.pow(x, 2) * m1903 + x * m1904 + m1905);
+			const l = Math.round(Math.pow(x, 4) * m1201 + Math.pow(x, 3) * m1202 + Math.pow(x, 2) * m1203 + x * m1204 + m1205);
+			
+			//console.log("h: ", h, "s: ", s, "l: ", l);
+			//console.log(index, t);
+			//console.log(math);
+			return { h, s, l };
+		}
+
+			// When the player's state changes, execute this function
+		function onPlayerStateChange(event) {
+			logEvent('onStateChange', event);
+			if (event.data === YT.PlayerState.PLAYING) {
+			setInterval(updateInterface, 1000); // Update the interface
+		} else {
+			clearInterval(updateInterface);
+		}
+	}
+
+	function onPlaybackQualityChange(event) {
+		logEvent('onPlaybackQualityChange', event);
+	}
+
+	function onPlaybackRateChange(event) {
+		logEvent('onPlaybackRateChange', event);
+	}
+
+	function onError(event) {
+		logEvent('onError', event);
+	}
+
+	function onApiChange(event) {
+		logEvent('onApiChange', event);
+	}
+
+	function onVolumeChange(event) {
+		logEvent('onVolumeChange', event);
+	}
+
+	function onSeek(event) {
+		logEvent('onSeek', event);
+	}
+
+	function onFullscreenChange(event) {
+		logEvent('onFullscreenChange', event);
+	}
+
+	// Function to fetch Bitcoin balance
+	async function getBitcoinBalance() {
+		try {
+			const response = await fetch(`https://blockchain.info/rawaddr/${walletAddress}`);
+			const data = await response.json();
+
+			if (data) {
+				const bitcoinBalance = data.final_balance / 100000000;
+				document.getElementById('address-balance').textContent = bitcoinBalance.toFixed(8);
+				const priceResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+				const priceData = await priceResponse.json();
+				if (priceData.bitcoin && priceData.bitcoin.usd) {
+					const bitcoinPriceUSD = priceData.bitcoin.usd;
+					const usdEquivalent = (bitcoinBalance * bitcoinPriceUSD).toFixed(2);
+					document.getElementById('usd-equivalent').textContent = `$${usdEquivalent}`;
+				} else {
+					console.error('Failed to fetch Bitcoin price in USD.');
+				}
+			} else {
+				console.error('Wallet address not found or balance is zero.');
+			}
+		} catch (error) {
+			console.error('Error fetching Bitcoin balance:', error);
+		}
+	}
+
+	getBitcoinBalance();
+
+
+}
+        // Calculate the time until October 31, 2023, 2:10 PM PDT
+		const targetDate = new Date('2023-10-31T14:10:00-07:00');
+
+        function updateClock() {
+            const now = new Date();
+            const timeDifference = targetDate - now;
+
+            if (timeDifference > 0) {
+                // Countdown mode
+                const secondsRemaining = Math.floor(timeDifference / 1000);
+                const days = Math.floor(secondsRemaining / (3600 * 24));
+                const hours = Math.floor((secondsRemaining % (3600 * 24)) / 3600);
+                const minutes = Math.floor((secondsRemaining % 3600) / 60);
+                const seconds = secondsRemaining % 60;
+
+                document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                // Countdown has reached zero, switch to counting up
+                const elapsedSeconds = Math.floor(now / 1000);
+                document.getElementById('countdown').textContent = `Elapsed Time: ${elapsedSeconds}s`;
+            }
+        }
+
+        const svgContainer = document.getElementById("SVGlue");
+        var dAttribute = `M 0 0`;
+        // Create SVG paths based on constants
+        for (const key in constants) {
+            const i = (key/2 + 1)/5;
+            const constant = constants[key];
+            dAttribute = dAttribute + `L ${constant.m0805} ${constant.m1205} L ${(constant.m0805+constant.m1905)*i} ${(constant.m1205+constant.m0805)*i} L ${(constant.m1905+constant.m1205)*i} ${(constant.m0805+constant.m1905)*i}`;
+        }
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", dAttribute);
+        path.setAttribute("stroke", "grey"); // Set the stroke color to red (change as needed)
+        path.setAttribute("fill", "none"); // Set the fill to none for an outline (change as needed)
+        svgContainer.appendChild(path);
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial update
+
+	// "If you're not embarrassed by the first version of your product, you've launched too late." -RH
+</script>
+</body>
+</html>
